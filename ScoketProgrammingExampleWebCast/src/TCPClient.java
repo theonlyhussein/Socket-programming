@@ -13,7 +13,7 @@ public class TCPClient {
 		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 
         // Create a socket for the client to connect to a server at localhost on port 6789
-		Socket clientSocket = new Socket("34.41.104.194", 8080);
+		Socket clientSocket = new Socket("10.128.0.2", 8080);
 		System.out.println("Client successfully established TCP connection.\n"
 				+ "Client(local) end of the connection uses port " 
 				+ clientSocket.getLocalPort() 
