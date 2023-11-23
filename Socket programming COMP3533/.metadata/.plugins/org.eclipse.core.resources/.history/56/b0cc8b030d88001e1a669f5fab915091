@@ -1,0 +1,102 @@
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class TCPServer {
+	
+	/**
+	 * This is the server program for a simple TCP socket-based word prefix matching service.
+	 * 
+	 * @author Thal, Ghoza 
+	 */
+    public static void main(String[] args) throws Exception {
+        
+        // Create a server socket that listens on port 6789
+    	ServerSocket welcomeSocket = new ServerSocket(6789);
+
+        // Load the list of words from a text file
+    	List<String> wordList = loadWordList("words.txt");
+
+        System.out.println("Server is running and listening for connections...");
+
+        while (true) {
+            // Accept a new client connection
+            Socket connectionSocket = welcomeSocket.accept();
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+            System.out.println("Accepted TCP connection from " + connectionSocket.getInetAddress() + ":" + connectionSocket.getPort());
+
+            try {
+                while (true) {
+                    // Read the client's prefix input
+                    String clientPrefix = inFromClient.readLine();
+
+                    if (clientPrefix.equalsIgnoreCase("exit")) {
+                        // If the client enters "exit", exit the loop
+                    	break;
+                    }
+                    
+                    // Find matching words and send the response back to the client
+                    String matchedWords = findMatchingWords(wordList, clientPrefix);
+                    String toUpperCase =clientPrefix.toUpperCase();
+                    outToClient.writeBytes(toUpperCase + '\n');
+                    //outToClient.writeBytes(matchedWords + '\n');
+                }
+            } catch (Exception e) {
+                System.out.println("Client closed connection.");
+            } finally {
+                // Close the client connection
+                connectionSocket.close();
+            }
+        }
+    }
+    
+    /**
+     * Load a list of words from a text file.
+     *
+     * @param fileName The name of the text file containing the words.
+     * @return A list of words loaded from the file.
+     * @throws IOException If there is an issue reading the file.
+     * 
+     * @author Hussein
+     */
+    
+
+    private static List<String> loadWordList(String fileName) throws IOException {
+        List<String> wordList = new ArrayList<>();
+        Scanner scanner = new Scanner(new File(fileName));
+        while (scanner.hasNextLine()) {
+            wordList.add(scanner.nextLine());
+        }
+        return wordList;
+    }
+    
+    /**
+     * Find words that start with the given prefix in the word list.
+     *
+     * @param wordList The list of words to search in.
+     * @param prefix   The prefix to match.
+     * @return A message containing matching words or a message indicating no matches found.
+     * 
+     * @author Matt
+     */
+
+    private static String findMatchingWords(List<String> wordList, String prefix) {
+        StringBuilder result = new StringBuilder();
+        for (String word : wordList) {
+            if (word.toLowerCase().startsWith(prefix.toLowerCase()) && 0 < prefix.length()) {
+                if (result.length() > 0) {
+                    result.append(", ");
+                }
+                result.append(word);
+            }
+        }
+        if (result.length() == 0) {
+            result.append("No matching words found.");
+        }
+        return "The following words start with " + prefix + ": " + result.toString();
+    }
+}
