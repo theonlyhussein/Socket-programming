@@ -8,7 +8,7 @@ public class TCPServer {
 
     public static void main(String[] args) throws Exception {
         // Create a server socket that listens on port 6789
-        ServerSocket welcomeSocket = new ServerSocket(6789);
+        ServerSocket welcomeSocket = new ServerSocket(8080);
 
         while (true) {
             // Accept a connection from a client
