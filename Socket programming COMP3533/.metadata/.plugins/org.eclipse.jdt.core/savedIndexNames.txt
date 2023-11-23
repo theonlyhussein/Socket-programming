@@ -1,4 +1,0 @@
-INDEX VERSION 1.131+C:\Users\Hussein\Socket programming COMP3533\.metadata\.plugins\org.eclipse.jdt.core
-1865797976.index
-506978025.index
-734744078.index
